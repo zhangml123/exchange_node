@@ -1,21 +1,34 @@
 'use strict'
 var HitbtcApi = require("./lib/api/hitbtcApi");
 var BinanceApi = require("./lib/api/binanceApi");
-var LocalStorage = require("node-localstorage").LocalStorage;
+var OkexApi = require("./lib/api/okexApi");
 class common{
 	constructor(params){
-		var htibtc_key = ""
+		var htibtc_key = "";
 		var hitbtc_secret="";
 		var binance_key = "";
-		var binacne_secret = ""
-		var localStorage_timestamp = new LocalStorage('./tinestamp');
+		var binacne_secret = "";
+		var okex_key = "";
+		var okex_secret = "";
+		
 		var hitbtcApi = new HitbtcApi(htibtc_key,hitbtc_secret);
 		var binanceApi = new BinanceApi(binance_key,binacne_secret);
-		this.localStorage_timestamp = localStorage_timestamp;
+		var okexApi = new OkexApi(okex_key,okex_secret);
 		this.hitbtcApi = hitbtcApi;
 		this.binanceApi = binanceApi;
-		this.pause = true;
+		this.okexApi = okexApi;
+	
 	}
+
+
+
+
+	
+
+
+
+
+	
 }
 
 module.exports = common

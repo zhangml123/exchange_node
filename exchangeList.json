@@ -1,0 +1,45 @@
+[{
+	"name":"binance",
+	"api":"./lib/api/binanceApi",
+	"ticker":"./lib/ticker/BinanceTicker",
+	"api_key":"",
+	"secret_key":"",
+	"free":"free",
+	"locked":"locked",
+	"currency":{
+		"btc":"BTC",
+		"usdt":"USDT",
+		"eos":"EOS"
+	},
+	"rate":0.0005
+
+},{
+	"name":"hitbtc",
+	"api":"./lib/api/hitbtcApi",
+	"ticker":"./lib/ticker/HitbtcTicker",
+	"api_key":"",
+	"secret_key":"",
+	"free":"available",
+	"locked":"reserved",
+	"currency":{
+		"btc":"BTC",
+		"usdt":"USD",
+		"eos":"EOS"
+	},
+	"rate":0.001
+
+},{
+	"name":"okex",
+	"api":"./lib/api/okexApi",
+	"ticker":"./lib/ticker/OkexTicker",
+	"api_key":"",
+	"secret_key":"",
+	"free":"free",
+	"locked":"freezed",
+	"currency":{
+		"btc":"BTC",
+		"usdt":"USDT",
+		"eos":"EOS"
+	},
+	"rate":0.001
+}]

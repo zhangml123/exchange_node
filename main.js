@@ -9,186 +9,83 @@ class main extends common{
 	}
 	refreshData(){
 		var self = this;
-		var localStorage  = this.params.localStorage;
-		this.binanceLowestAsk = localStorage.getItem('binanceLowestAsk');
-		this.binacneHighestBid = localStorage.getItem('binacneHighestBid');
-		this.hitbtcLowestAsk = localStorage.getItem('hitbtcLowestAsk');
-		this.hitbtcHighestBid = localStorage.getItem('hitbtcHighestBid');
+		for(var k in this.params.orders){
 
-
-		//console.log(this.binanceLowestAsk)
-		//console.log(this.binacneHighestBid );
-
-		//this.bitfinexLowestAsk = localStorage.getItem('bitfinexLowestAsk');
-		//this.bitfinexHighestBid = localStorage.getItem('bitfinexHighestBid');
-		try{
-			var binanceLAPrice = parseFloat(JSON.parse(this.binanceLowestAsk)[0]).toFixed(8);
-			var binanceLAAmount = parseFloat(JSON.parse(this.binanceLowestAsk)[1]).toFixed(8); 
-			var binanceHBPrice = parseFloat(JSON.parse(this.binacneHighestBid)[0]).toFixed(8);
-			var binanceHBAmount = parseFloat(JSON.parse(this.binacneHighestBid)[1]).toFixed(8);
-
-			var hitbtcLAPrice = parseFloat(JSON.parse(this.hitbtcLowestAsk)[0]).toFixed(8);
-			var hitbtcLAAmount = parseFloat(JSON.parse(this.hitbtcLowestAsk)[1]).toFixed(8);
-			var hitbtcHBPrice = parseFloat(JSON.parse(this.hitbtcHighestBid)[0]).toFixed(8);
-			var hitbtcHBAmount = parseFloat(JSON.parse(this.hitbtcHighestBid)[1]).toFixed(8);
-
-			//var bitfinexLAPrice = parseFloat(JSON.parse(this.bitfinexLowestAsk).ask).toFixed(8);
-			//var bitfinexLAAmount = parseFloat(JSON.parse(this.bitfinexLowestAsk).amount).toFixed(8);
-			//var bitfinexHBPrice = parseFloat(JSON.parse(this.bitfinexHighestBid).bid).toFixed(8);
-			//var bitfinexHBAmount = parseFloat(JSON.parse(this.bitfinexHighestBid).amount).toFixed(8);
-		}catch(e){
-			console.log(e)
-
+			if(this.params.orders[k] == null){
+				console.log("\x1B[33m Warning : 获取数据... \x1B[0m \n");
+				return false;
+			}
 		}
-		
-		if( binanceLAPrice && binanceLAAmount &&
-			binanceHBPrice && binanceHBAmount &&
-			hitbtcLAPrice && hitbtcLAAmount &&
-			hitbtcHBPrice && hitbtcHBAmount //&&
-			//bitfinexLAPrice && bitfinexLAAmount &&
-			//bitfinexHBPrice && bitfinexHBAmount
+		this.db.query("SELECT * FROM exc_balance ORDER BY timestamp desc LIMIT 1 ",(data)=>{
 
-		){
-			//console.log("binance  最高bid = \x1B[36m"+parseFloat(binanceHBPrice).toFixed(8) +'\x1B[0m amount = '+parseFloat(binanceHBAmount).toFixed(8) +"binance 最低ask = \x1B[36m"+parseFloat(binanceLAPrice).toFixed(8) +'\x1B[0m amount = '+parseFloat(binanceLAAmount).toFixed(8) +'\n') ;
-			//console.log("hitbtc   最高bid = \x1B[33m"+parseFloat(hitbtcHBPrice).toFixed(8) +'\x1B[0m amount = '+parseFloat(hitbtcHBAmount).toFixed(8) +"binance 最低ask = \x1B[33m"+parseFloat(hitbtcLAPrice).toFixed(8) +'\x1B[0m amount = '+parseFloat(hitbtcLAAmount).toFixed(8) +'\n') ;
-			//console.log("bitfinex 最高bid = \x1B[32m"+parseFloat(bitfinexHBPrice).toFixed(8) +'\x1B[0m amount = '+parseFloat(bitfinexHBAmount).toFixed(8) +"binance 最低ask = \x1B[32m"+parseFloat(bitfinexLAPrice).toFixed(8) +'\x1B[0m amount = '+parseFloat(bitfinexLAAmount).toFixed(8) +'\n') ;
-
-			var binanceToHitbtcPrice = parseFloat(binanceHBPrice - hitbtcLAPrice).toFixed(8);
-		//	var binanceToBitfinexPrice =  parseFloat(binanceHBPrice - bitfinexLAPrice).toFixed(8);
-
-			var hitbtcToBinancePrice =  parseFloat(hitbtcHBPrice - binanceLAPrice).toFixed(8);
-			//var hitbtcToBitfinexPrice =  parseFloat(hitbtcHBPrice - bitfinexLAPrice).toFixed(8);
-
-			//var bitfinexToBinancePrice =  parseFloat(bitfinexHBPrice - binanceLAPrice).toFixed(8);
-			//var bitfinexToHitbtcPrice =  parseFloat(bitfinexHBPrice - hitbtcLAPrice).toFixed(8);
-
-			/*console.log("binance  最高bid = "+binanceHBPrice+" hitbtc  最低ask = "+hitbtcLAPrice+" 差价 = \x1B[36m"+binanceToHitbtcPrice+
-						"\x1B[0m bitfinex 最低ask = "+bitfinexLAPrice+" 差价 = \x1B[36m"+binanceToBitfinexPrice+"\x1B[0m\n");
-			console.log("hitbtc   最高bid = "+hitbtcHBPrice+" binance 最低ask = "+binanceLAPrice+" 差价 = \x1B[36m"+hitbtcToBinancePrice+
-						"\x1B[0m bitfinex 最低ask = "+bitfinexLAPrice+" 差价 = \x1B[36m"+hitbtcToBitfinexPrice+"\x1B[0m\n");
-			console.log("bitfinex 最高bid = "+bitfinexHBPrice+" hitbtc  最低ask = "+hitbtcLAPrice+" 差价 = \x1B[36m"+bitfinexToHitbtcPrice+
-						"\x1B[0m binance  最低ask = "+binanceLAPrice+" 差价 = \x1B[36m"+bitfinexToBinancePrice+"\x1B[0m\n\n");
-*/
-
-			console.log("binance  最高bid = "+binanceHBPrice+" hitbtc  最低ask = "+hitbtcLAPrice+" 差价 = \x1B[36m"+binanceToHitbtcPrice+
-						"\x1B[0m hitbtc   最高bid = "+hitbtcHBPrice+" binance 最低ask = "+binanceLAPrice+" 差价 = \x1B[36m"+hitbtcToBinancePrice+"\x1B[0m \n")
-
-			var rate= {};
-			rate.binance = 0.0005;
-			rate.hitbtc = 0.001;
-			rate.bitfinex = 0.002;
-
+			if(data == null){
+				console.log("\x1B[31m Error : 数据库异常 \x1B[0m \n");
+				return false;
+			}
+			if(!data.balance){
+				console.log("\x1B[31m Error : 获取余额失败 \x1B[0m \n");
+				return false;
+			}
+			var result = []
+			this.params.exchanges.map((v,k)=>{
+				var exchangeA = v;
+				var exchanges = self.params.exchanges;
+				result.push(self.comparePrice(exchangeA,exchanges,data.balance));
+			})
+			result.map((v,k)=>{
+				if(v.str_profit){
+					console.log(v.str_profit)
+				}
+				if(v.str_createorder){
+					console.log(v.str_createorder)
+				}
+				
+				if(v.str_amount_error){
+					console.log(v.str_amount_error)
+				}
+			})
+			if(this.params.balanceSaved === false){
+				console.log("\x1B[33m Error : saving the balance... \x1B[0m \n");
+				return false;
+			}
 			var orders = [];
-			if(binanceToHitbtcPrice > 0 && hitbtcToBinancePrice <= 0){
-				var binanceToHitbtcProfit = binanceHBPrice * ( 1 - rate.binance ) - hitbtcLAPrice * ( 1 +  rate.hitbtc);
-				if(binanceToHitbtcProfit > 0){
-					console.log("createOrder - binance To hitbtc");
-					var amount = (binanceHBAmount - hitbtcLAAmount) >= 0 ? hitbtcLAAmount : binanceHBAmount;
-					orders.push({exchange:["binance","hitbtc"],price:[binanceHBPrice,hitbtcLAPrice],amount:amount,Profit:binanceToHitbtcProfit})
-				}else{
-					console.log("\x1B[31m binanceToHitbtcProfit = "+binanceHBPrice+" * ( 1 - "+rate.binance+" )"+" - "+hitbtcLAPrice +" * ( 1 +  "+rate.hitbtc+") = " + binanceToHitbtcProfit +"\x1B[0m \n")	
+			result.map((v,k)=>{
+				if((v.orders).length != 0){
+					orders = orders.concat(v.orders)
 				}
-				//this.createOrder(["binance","hitbtc"],[binanceHBPrice,hitbtcLAPrice],amount);
+			})
+
+			if(orders.length > 0){
+				console.log(orders)
+				this.createOrder(orders)
+			}else{
+				console.log("\n")
+				return false;
 			}
-		/*	if(binanceToBitfinexPrice > 0 && bitfinexToBinancePrice <= 0){
-				var binanceToBitfinexProfit = binanceHBPrice * (1 - rate.binance ) - bitfinexLAPrice * ( 1 + rate.bitfinex);
-				if(binanceToBitfinexProfit > 0){
-					console.log("createOrder - binance To bitfinex");
-					var amount = (binanceHBAmount - bitfinexLAAmount) >= 0 ? bitfinexLAAmount : binanceHBAmount;
-					orders.push({exchange:["binance","bitfinex"],price:[binanceHBPrice,bitfinexLAPrice],amount:amount,Profit:binanceToBitfinexProfit})
-				}else{
-					console.log("binanceToBitfinexProfit = "+binanceHBPrice+" * ( 1 - "+rate.binance+" )"+" - "+bitfinexLAPrice +" * ( 1 +  "+rate.bitfinex+") = " + binanceToBitfinexProfit)	
-				}
-				//this.createOrder(["binance","bitfinex"],[binanceHBPrice,bitfinexLAPrice],amount);
-			}*/
-			if(hitbtcToBinancePrice > 0 && binanceToHitbtcPrice <= 0){
-				var hitbtcToBinanceProfit = hitbtcHBPrice * ( 1 - rate.hitbtc ) - binanceLAPrice * ( 1 + rate.binance);
-				if(hitbtcToBinanceProfit > 0 ){
-					console.log("createOrder - hitbtc To binance");
-					var amount = ((hitbtcHBAmount - binanceLAAmount) >= 0) ? binanceLAAmount : hitbtcHBAmount;
-					orders.push({exchange:["hitbtc","binance"],price:[hitbtcHBPrice,binanceLAPrice],amount:amount,Profit:hitbtcToBinanceProfit})
-				}else{
-					console.log("\x1B[31m hitbtcToBinanceProfit = "+hitbtcHBPrice+" * ( 1 - "+rate.hitbtc+" )"+" - "+binanceLAPrice +" * ( 1 +  "+rate.binance+") = " + hitbtcToBinanceProfit +"\x1B[0m \n")	
-				}
-				//this.createOrder(["hitbtc","binance"],[hitbtcHBPrice,binanceLAPrice],amount);
-			}
-			/*if(hitbtcToBitfinexPrice > 0 && bitfinexToHitbtcPrice <= 0 ){
-				var hitbtcToBitfinexProfit = hitbtcHBPrice * ( 1 - rate.hitbtc ) - bitfinexLAPrice * ( 1 + rate.bitfinex);
-				if(hitbtcToBitfinexProfit > 0 ){
-					console.log("createOrder - hitbtc To bitfinex");
-					var amount = (hitbtcHBAmount - bitfinexLAAmount) >= 0 ? bitfinexLAAmount : hitbtcHBAmount;
-					orders.push({exchange:["hitbtc","bitfinex"],price:[hitbtcHBPrice,bitfinexLAPrice],amount:amount,Profit:hitbtcToBitfinexProfit})
-				}else{
-					console.log("hitbtcToBitfinexProfit = "+hitbtcHBPrice+" * ( 1 - "+rate.hitbtc+" )"+" - "+bitfinexLAPrice +" * ( 1 +  "+rate.bitfinex+") = " + hitbtcToBitfinexProfit)	
-				}
-				//this.createOrder(["hitbtc","bitfinex"],[hitbtcHBPrice,bitfinexLAPrice],amount);
-			}
-			if(bitfinexToHitbtcPrice > 0 && hitbtcToBitfinexPrice <= 0){
-				var bitfinexToHitbtcProfit = bitfinexHBPrice * ( 1 - rate.bitfinex ) - hitbtcLAPrice * ( 1 + rate.hitbtc);
-				if(bitfinexToHitbtcProfit > 0 ){
-					console.log("createOrder - bitfinex To hitbtc");
-					var amount = (bitfinexHBAmount - hitbtcLAAmount) >= 0 ? hitbtcLAAmount : bitfinexHBAmount;
-					orders.push({exchange:["bitfinex","hitbtc"],price:[bitfinexHBPrice,hitbtcLAPrice],amount:amount,Profit:bitfinexToHitbtcProfit})
-				}else{
-					console.log("bitfinexToHitbtcProfit = "+bitfinexHBPrice+" * ( 1 - "+rate.bitfinex+" )"+" - "+hitbtcLAPrice +" * ( 1 +  "+rate.hitbtc+") = " + bitfinexToHitbtcProfit)	
-				}
-				//this.createOrder(["bitfinex","hitbtc"],[bitfinexHBPrice,hitbtcLAPrice],amount);
-			}
-			if(bitfinexToBinancePrice > 0 && binanceToBitfinexPrice <= 0){
-				var bitfinexToBinanceProfit = bitfinexHBPrice * ( 1 - rate.bitfinex ) - binanceLAPrice * ( 1 + rate.binance);
-				console.log(bitfinexToBinanceProfit)
-				if(bitfinexToBinanceProfit > 0 ){
-					console.log("createOrder - bitfinex To binance");
-					var amount = (bitfinexHBAmount - binanceLAAmount) >= 0 ? binanceLAAmount : bitfinexHBAmount;
-					orders.push({exchange:["bitfinex","binance"],price:[bitfinexHBPrice,binanceLAPrice],amount:amount,Profit:bitfinexToBinanceProfit})
-				}else{
-					console.log("bitfinexToBinanceProfit = "+bitfinexHBPrice+" * ( 1 - "+rate.bitfinex+" )"+" - "+binanceLAPrice +" * ( 1 +  "+rate.binance+") = " + bitfinexToBinanceProfit)	
-				}
-				//this.createOrder(["bitfinex","binance"],[bitfinexHBPrice,binanceLAPrice],amount)
-			}*/
-			this.createOrder(orders);
-		}else{
-			console.log("获取数据...")
-		}
+		})
 	}
 
 	createOrder(orders){
+		orders.sort((a,b)=>{return b.Profit - a.Profit});
+		var order = {};
+		var sell = {};
+		var buy = {};
+		var exchange = orders[0].exchange;
+		var price  = orders[0].price;
+		var amount = orders[0].amount;
+		sell.exchange = exchange[0];
+		sell.price = price[0];
+		buy.exchange = exchange[1];
+		buy.price = price[1];
+		order.sell = sell;
+		order.buy = buy;
+		order.amount = amount;
+		console.log(order);
+		
+//return ;
+	
+		this.orderSubmit(order);
 
-		if(orders.length == 1){
-				var order = {};
-				var sell = {};
-				var buy = {};
-				var exchange = orders[0].exchange;
-				var price  = orders[0].price;
-				var amount = orders[0].amount;
-				sell.exchange = exchange[0];
-				sell.price = price[0];
-				buy.exchange = exchange[1];
-				buy.price = price[1];
-				order.sell = sell;
-				order.buy = buy;
-				order.amount = amount;
-			this.orderSubmit(order);
-		}else if(orders.length == 2){
-			if(orders[0].Profit >= orders[1].Profit){
-				console.log(orders[0])
-
-			}else{
-				console.log(orders[1])
-			}
-
-		}else if(orders.length == 3){
-			if(orders[0].Profit >= orders[1].Profit && orders[0].Profit >= orders[2].Profit){
-				console.log(orders[0])
-				//this.orderSubmit(orders[0]);
-			}else if(orders[1].Profit >= orders[0].Profit && orders[1].Profit >= orders[2].Profit){
-				console.log(orders[1])
-				//this.orderSubmit(orders[1]);
-			}else if(orders[2].Profit >= orders[0].Profit && orders[2].Profit >= orders[1].Profit){
-				console.log(orders[2])
-				//this.orderSubmit(orders[2]);
-			}
-		}
 
 	}
 
@@ -198,18 +95,27 @@ class main extends common{
 		var db = self.db;
 		var params = self.params;
 		if(	self.params.autoExchange === true ){
+
+			console.log("self.params.pause1111 = "+self.params.pause)
 			if(self.params.pause === false){
-				
-				console.log(order);
 				var exchange = new Exchange(order,params);
 				exchange.trade();
 			}else{
 				console.log(" \x1B[33m 交易已暂停 \x1B[0m \n");
-				var time = new Date().getTime() - 60 * 1000;
-				self.db.query("SELECT COUNT( * ) FROM exc_order WHERE (status = 0 and submitTime > " + time + " ) ",function(data){
+				
+				var time = new Date().getTime() - 300 * 1000;
+				self.db.query("SELECT COUNT( * ) FROM exc_order WHERE (status = 0 and submitTime > "+time+") ",function(data){
 					for(var k in data){var count = data[k]}
-					if(count < 3 ){
+					if(count < 5){
 						self.db.query("UPDATE exc_set SET pause = 1 WHERE id = 1",function(data){});
+					}
+				})
+
+				var time = new Date().getTime() - 600 * 1000;
+				self.db.query("SELECT COUNT( * ) FROM exc_order WHERE (status = 0 and submitTime > "+time+") ",function(data){
+					for(var k in data){var count = data[k]}
+					if(count > 8 ){
+						throw "failed order = "+ count + " > 8";
 					}
 				})
 
@@ -218,17 +124,99 @@ class main extends common{
 			console.log(" \x1B[33m 交易已关闭 \x1B[0m \n");
 		}
 		self.db.findOne("exc_set",(data)=>{
-			if(data.pause == 1){
-				self.params.pause = false
-			}else if(data.pause == 0){
-				self.params.pause = true
+			if(data){
+				if(data.pause == 1){
+					self.params.pause = false
+				}else if(data.pause == 0){
+					self.params.pause = true
+				}
+				if(data.autoExchange == 1){
+					self.params.autoExchange = true
+				}else if(data.autoExchange == 0){
+					self.params.autoExchange = false
+				}
+			}else{
+				return;
 			}
-			if(data.autoExchange == 1){
-				self.params.autoExchange = true
-			}else if(data.autoExchange == 0){
-				self.params.autoExchange = false
+			
+		})
+	}
+
+	comparePrice(exchangeA, exchanges, balance){
+		var self = this;
+		var orders = [];
+		var exchangeAHighestBid = this.params.orders[exchangeA+"HighestBid"];
+		var exchangeALowestAsk = this.params.orders[exchangeA+"LowestAsk"];
+		var exchangeAHBP = parseFloat(JSON.parse(exchangeAHighestBid)[0]).toFixed(8);
+		var exchangeAHBA = parseFloat( JSON.parse(exchangeAHighestBid)[1]).toFixed(8);
+		var str = "";
+		var str_createorder = "";
+		var str_profit = "";
+		var str_amount_error = "";
+		exchanges.map( exchangeB =>{
+			if(exchangeA != exchangeB){
+				var exchangeBHighestBid = this.params.orders[exchangeB+"HighestBid"];
+				var exchangeBLowestAsk = this.params.orders[exchangeB+"LowestAsk"];
+				var exchangeBLAP = parseFloat(JSON.parse(exchangeBLowestAsk)[0]).toFixed(8);
+				var exchangeBLAA = parseFloat(JSON.parse(exchangeBLowestAsk)[1]).toFixed(8);
+				
+				str += " " + exchangeB + " 最低ask = " + exchangeBLAP + " 差价 = \x1B[36m "+ parseFloat(exchangeAHBP - exchangeBLAP).toFixed(8) +" \x1B[0m "
+				var AToBPrice = exchangeAHBP - exchangeBLAP;
+				var rate = self.params.rate;
+				if(AToBPrice > 0){
+					var Profit = exchangeAHBP * ( 1 - rate[exchangeA] ) - exchangeBLAP * ( 1 + rate[exchangeB]);
+					if(Profit > 0){
+						str_createorder += "createOrder - " + exchangeA + " To " + exchangeB + "\n";
+						var amount = ((exchangeAHBA - exchangeBLAA) >= 0) ? exchangeBLAA : exchangeAHBA;
+						var orderAmount = amount;
+						var balances = self.params.balances;
+						var balanceA = balances[exchangeA];
+						var balanceB = balances[exchangeB]
+
+						var I_C_sell = JSON.parse(balance)[exchangeA][balanceA.I_C][balanceA.free];
+						var B_C_buy = JSON.parse(balance)[exchangeB][balanceB.B_C][balanceB.free];
+						if(exchangeB === "hitbtc"){ B_C_buy = B_C_buy - 0.001 }
+						var I_C_buy = B_C_buy / (exchangeBLAP * ( 1 + rate[exchangeB]));
+
+						var amount_max = [];
+						amount_max.push(I_C_sell);
+						amount_max.push(I_C_buy);
+						amount_max.sort((a,b)=>{return a-b});
+						amount = Math.floor(amount ) ;
+
+
+
+						console.log("I_C_sell = "+I_C_sell)
+						console.log("I_C_buy = "+I_C_buy)
+						console.log(amount_max)
+						if(amount > amount_max[0]){
+							amount = Math.floor(amount_max[0]) ;
+						}
+						if(amount > 500){
+							amount = 500;
+						}
+
+						console.log("amount = "+amount)
+						if(typeof amount != "number"){return false;}
+						if(exchangeA === "binance" && (exchangeAHBP * amount) <= 0.002 ) amount = 0;
+						if(exchangeB === "binance" && (exchangeBLAP * amount) <= 0.002) amount = 0;
+						if(amount >= 5 ){
+							
+							orders.push({exchange:[exchangeA, exchangeB],price:[exchangeAHBP, exchangeBLAP],amount:amount,Profit:Profit})
+						}else{
+							str_amount_error += " \x1B[31m Error : amount < 5 , amount_max = "+amount_max[0]+" , order_amount = " + orderAmount + "\x1B[0m \n";
+						}
+					}else{
+						str_profit += "\x1B[31m " + exchangeA + "To" + exchangeB + "Profit = "+ exchangeAHBP +" * ( 1 - "+ rate[exchangeA] +" )"+" - "+ exchangeBLAP +" * ( 1 +  "+ rate[exchangeB] +") = " + Profit +"\x1B[0m \n"
+					}
+					 
+				}
+
 			}
 		})
+		console.log( exchangeA + " 最高bid = "+ exchangeAHBP + str +"\n");
+		return {orders:orders,str_createorder:str_createorder,str_profit:str_profit,str_amount_error};
+
 	}
 }
 

@@ -29,7 +29,7 @@ class db_function{
 	delete(){
 
 	}
-	insert(table,data){
+	insert(table,data,cb){
 		if(table && data){
 			var self= this
 			var k1 = "";
@@ -41,7 +41,12 @@ class db_function{
 			self.connection.query('INSERT INTO ' + table + ' (' + k1.substr(0,k1.length-1) + ') VALUES (' + v1.substr(0,v1.length-1) + ') ',function(error,results,fields){
 				if(error){
 					console.log("mysql error")
-					self.connectionErrorException(error,self);
+					throw error;
+				}else{
+					if(cb){
+						console.log(results.insertId);
+						cb(results.insertId);
+					}
 				}
 			});
 		}
