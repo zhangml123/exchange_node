@@ -19,8 +19,19 @@ class db_function{
 			}); 
 		}
 	}
-	findAall(){
-
+	
+	findAll(sql,cb){
+		var self= this
+		self.connection.query(sql,function(error,results,fields){
+			if (error){
+				console.log("mysql error")
+				self.connectionErrorException(error,self);
+				cb(null);
+			}else{
+				var data = results;
+				cb(data);
+			} 
+		});
 	}
 
 	update(){
@@ -30,8 +41,9 @@ class db_function{
 
 	}
 	insert(table,data,cb){
+		
 		if(table && data){
-			var self= this
+			var self = this
 			var k1 = "";
 			var v1 = "";
 			for( var k in data ){

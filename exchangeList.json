@@ -9,7 +9,8 @@
 	"currency":{
 		"btc":"BTC",
 		"usdt":"USDT",
-		"eos":"EOS"
+		"eos":"EOS",
+		"eth":"ETH"
 	},
 	"rate":0.0005
 
@@ -24,7 +25,8 @@
 	"currency":{
 		"btc":"BTC",
 		"usdt":"USD",
-		"eos":"EOS"
+		"eos":"EOS",
+		"eth":"ETH"
 	},
 	"rate":0.001
 
@@ -37,9 +39,25 @@
 	"free":"free",
 	"locked":"freezed",
 	"currency":{
-		"btc":"BTC",
-		"usdt":"USDT",
-		"eos":"EOS"
+		"btc":"btc",
+		"usdt":"usdt",
+		"eos":"eos",
+		"eth":"eth"
 	},
 	"rate":0.001
+},{
+	"name":"huobi",
+	"api":"./lib/api/huobiApi",
+	"ticker":"./lib/ticker/HuobiTicker",
+	"api_key":"",
+	"secret_key":"",
+	"free":"trade",
+	"locked":"frozen",
+	"currency":{
+		"btc":"btc",
+		"usdt":"usdt",
+		"eos":"eos",
+		"eth":"eth"
+	},
+	"rate":0.002
 }]
