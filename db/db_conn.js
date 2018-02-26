@@ -9,9 +9,9 @@ class db_conn{
 		var self = this;
 		self.option = {
 		  host     : 'localhost',
-		  user     : '',
-		  password : '',
-		  database : ''
+		  user     : 'root',
+		  password : 'QrPGLZquUJJ7Fvd',
+		  database : 'exchange_test'
 		}
 		self.connection = mysql.createConnection(self.option);
 		self.connection.connect(function(e){

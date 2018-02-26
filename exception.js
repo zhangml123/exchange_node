@@ -1,13 +1,14 @@
 'use strict'
 
 class Exception {
-	constructor(error,params,db){
-		this.db = db;
+	constructor(error,app){
+		this.db = app.params.db;
 		this.error = error;
-		this.params = params;
+		this.params = app.params;
 	}
 	handleException(){
-		if(this.error.level){
+		//if(this.error.level){
+		if(false){
 			try{
 				var error = this.error;
 				console.log(error)
@@ -30,7 +31,6 @@ class Exception {
 					}else{
 						this.saveSystemError();
 					}
-					
 				}else{
 					this.saveSystemError();
 				}
@@ -46,20 +46,31 @@ class Exception {
 			this.saveSystemError();
 		}
 	}
-
 	saveSystemError(){
-		console.log(new Date());
 		var self = this;
+		var msg = (typeof this.error) == "string" ? this.error : JSON.stringify(this.error)
 		var data = {
 			timestamp : new Date().getTime(),
-			msg : JSON.stringify(this.error)
+			msg : msg
 		}
+		console.log(data)
 		this.db.insert("exc_system_error",data,function(rs){
-			console.log(rs);
-			self.db.query("UPDATE exc_set SET service = 0 WHERE id = 1",function(data){
-				console.log(self.error);
-				process.exit();
-			})
+			if(self.error.exchange){
+				self.params.exchanges.map((v,k)=>{
+					if(v.name == self.error.exchange){
+						self.params.exchanges[k].status = "closed";
+					}
+					console.log(self.params);
+					//process.exit();
+					self.db.query("UPDATE exc_exchange_status SET `status` = \"closed\" WHERE `name` = \""+ self.error.exchange +"\"" ,function(){})
+				})
+			}else{
+				console.log(self.error.exchange)
+				self.db.query("UPDATE exc_set SET service = 0 WHERE `id` = 1",function(data){
+					process.exit();
+				})
+			}
+			
 		});
 
 	}
